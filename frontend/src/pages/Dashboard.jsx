@@ -557,7 +557,7 @@ const Dashboard = () => {
                                 <div className="relative">
                                     <input
                                         type="date"
-                                        className="px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 w-full md:w-40"
+                                        className="px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 w-full md:w-40 appearance-auto pr-10"
                                         value={newTask.dueDate}
                                         onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
                                         disabled={isAddingTask}
