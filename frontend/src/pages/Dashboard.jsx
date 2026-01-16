@@ -1347,7 +1347,7 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* Add Task Form - Updated with Optional Due Date */}
+                    {/* Add Task Form - FIXED Date Input */}
                     <form onSubmit={addTask} className="p-4 border-b border-gray-200">
                         <div className="flex flex-col space-y-3">
                             <div className="w-full">
@@ -1362,26 +1362,41 @@ const Dashboard = () => {
                                 />
                             </div>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                                <div className="relative w-full">
+                                {/* Fixed Date Input Container */}
+                                <div className="relative w-full group">
                                     <input
                                         type="date"
-                                        className="px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 w-full appearance-auto pr-10"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 appearance-none"
                                         value={newTask.dueDate}
                                         onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
                                         disabled={isAddingTask}
+                                        onFocus={(e) => e.target.type = 'date'}
+                                        onBlur={(e) => {
+                                            if (!e.target.value) e.target.type = 'text';
+                                        }}
+                                        placeholder="DD/MM/YYYY"
                                     />
+                                    {/* Custom placeholder */}
+                                    {!newTask.dueDate && (
+                                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-sm">
+                                            DD/MM/YYYY
+                                        </div>
+                                    )}
+                                    {/* Clear button - fixed positioning */}
                                     {newTask.dueDate && (
                                         <button
                                             type="button"
                                             onClick={() => setNewTask({...newTask, dueDate: ''})}
-                                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-500 hover:text-red-700"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+                                            aria-label="Clear date"
                                         >
-                                            <X className="w-3 h-3" />
+                                            <X className="w-4 h-4" />
                                         </button>
                                     )}
                                 </div>
+                                
                                 <select
-                                    className="px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 w-full sm:w-auto"
+                                    className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900"
                                     value={newTask.status}
                                     onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
                                     disabled={isAddingTask}
@@ -1393,7 +1408,7 @@ const Dashboard = () => {
                                 <button
                                     type="submit"
                                     disabled={isAddingTask}
-                                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-1.5 text-sm shadow-sm w-full sm:w-auto"
+                                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-1.5 text-sm shadow-sm"
                                 >
                                     {isAddingTask ? (
                                         <>
@@ -1443,35 +1458,47 @@ const Dashboard = () => {
                                             key={task._id}
                                             className="group bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-all duration-200 hover:border-blue-200"
                                         >
-                                            <div className="flex items-start sm:items-center justify-between">
-                                                <div className="flex items-start sm:items-center space-x-3 flex-1">
+                                            <div className="flex items-start justify-between">
+                                                <div className="flex items-start flex-1 min-w-0">
                                                     {/* Task checkbox */}
                                                     <button
                                                         onClick={() => updateTaskStatus(
                                                             task._id,
                                                             task.status === 'Completed' ? 'Pending' : 'Completed'
                                                         )}
-                                                        className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 sm:mt-0 ${task.status === 'Completed'
+                                                        className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                                                            task.status === 'Completed'
                                                                 ? 'bg-gradient-to-r from-teal-500 to-teal-600 border-teal-600'
                                                                 : 'border-gray-300 hover:border-teal-500'
-                                                            }`}
+                                                        }`}
                                                     >
                                                         {task.status === 'Completed' && (
                                                             <CheckCircle className="w-3 h-3 text-white" />
                                                         )}
                                                     </button>
 
-                                                    <div className="flex-1 min-w-0">
-                                                        <h4 className={`font-medium text-gray-900 text-sm ${task.status === 'Completed' ? 'line-through text-gray-500' : ''}`}>
-                                                            {task.title}
-                                                        </h4>
-                                                        <div className="flex flex-wrap items-center gap-2 mt-1">
-                                                            <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
+                                                    <div className="ml-3 flex-1 min-w-0">
+                                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                            <h4 className={`font-medium text-gray-900 text-sm ${task.status === 'Completed' ? 'line-through text-gray-500' : ''}`}>
+                                                                {task.title}
+                                                            </h4>
+                                                            {/* Mobile Actions - Always visible on mobile */}
+                                                            <div className="md:hidden mt-1 sm:mt-0">
+                                                                <button
+                                                                    onClick={() => setActiveTaskMenu(activeTaskMenu === task._id ? null : task._id)}
+                                                                    className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                                                                >
+                                                                    <MoreVertical className="w-4 h-4" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                                                            <span className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
                                                                 {getStatusIcon(task.status)}
                                                                 <span>{task.status}</span>
                                                             </span>
                                                             {task.dueDate && (
-                                                                <span className="text-xs text-gray-500 flex items-center">
+                                                                <span className="text-xs text-gray-500 flex items-center bg-gray-50 px-2 py-1 rounded">
                                                                     <Clock className="w-3 h-3 mr-1" />
                                                                     Due: {format(new Date(task.dueDate), 'MMM d, yyyy')}
                                                                 </span>
@@ -1480,7 +1507,8 @@ const Dashboard = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="relative ml-2">
+                                                {/* Desktop Actions - Visible on hover */}
+                                                <div className="hidden md:block relative ml-2">
                                                     <button
                                                         onClick={() => setActiveTaskMenu(activeTaskMenu === task._id ? null : task._id)}
                                                         className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
@@ -1490,26 +1518,23 @@ const Dashboard = () => {
 
                                                     {activeTaskMenu === task._id && (
                                                         <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                                            {/* Edit Task button */}
                                                             <button 
                                                                 onClick={() => {
                                                                     setEditingTask(task);
                                                                     setActiveTaskMenu(null);
                                                                 }}
-                                                                className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 hover:from-indigo-100 hover:to-indigo-200"
+                                                                className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm hover:bg-gray-50 text-gray-700 border-b border-gray-100"
                                                             >
                                                                 <Edit className="w-3 h-3" />
                                                                 <span>Edit Task</span>
                                                             </button>
                                                             
-                                                            {/* Delete Task button */}
                                                             <button 
                                                                 onClick={() => {
                                                                     setTaskToDelete(task._id);
                                                                     setActiveTaskMenu(null);
                                                                 }}
-                                                                className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm
-                                                                    bg-gradient-to-r from-rose-50 to-rose-100 text-rose-700 hover:from-rose-100 hover:to-rose-200"
+                                                                className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm hover:bg-gray-50 text-red-600"
                                                             >
                                                                 <Trash2 className="w-3 h-3" />
                                                                 <span>Delete Task</span>
@@ -1517,6 +1542,33 @@ const Dashboard = () => {
                                                         </div>
                                                     )}
                                                 </div>
+
+                                                {/* Mobile Dropdown Menu */}
+                                                {activeTaskMenu === task._id && (
+                                                    <div className="md:hidden absolute right-4 mt-10 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                                        <button 
+                                                            onClick={() => {
+                                                                setEditingTask(task);
+                                                                setActiveTaskMenu(null);
+                                                            }}
+                                                            className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm hover:bg-gray-50 text-gray-700 border-b border-gray-100"
+                                                        >
+                                                            <Edit className="w-3 h-3" />
+                                                            <span>Edit Task</span>
+                                                        </button>
+                                                        
+                                                        <button 
+                                                            onClick={() => {
+                                                                setTaskToDelete(task._id);
+                                                                setActiveTaskMenu(null);
+                                                            }}
+                                                            className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm hover:bg-gray-50 text-red-600"
+                                                        >
+                                                            <Trash2 className="w-3 h-3" />
+                                                            <span>Delete Task</span>
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
