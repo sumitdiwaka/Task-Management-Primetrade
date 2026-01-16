@@ -15,7 +15,7 @@ connectDB();
 
 const app = express();
 app.use(cors({
-    origin: 'https://task-management-primetrade.vercel.app', // Paste your URL here
+    origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
