@@ -933,18 +933,18 @@ const Dashboard = () => {
 
     const getStatusIcon = (status) => {
         switch (status) {
-            case 'Completed': return <CheckCircle className="w-4 h-4" />;
-            case 'In Progress': return <Clock className="w-4 h-4" />;
-            case 'Pending': return <AlertCircle className="w-4 h-4" />;
+            case 'Completed': return <CheckCircle className="w-3.5 h-3.5" />;
+            case 'In Progress': return <Clock className="w-3.5 h-3.5" />;
+            case 'Pending': return <AlertCircle className="w-3.5 h-3.5" />;
             default: return null;
         }
     };
 
     // Status options for the edit modal
     const statusOptions = [
-        { value: 'Pending', label: 'Pending', color: 'bg-amber-500', icon: <AlertCircle className="w-4 h-4" /> },
-        { value: 'In Progress', label: 'In Progress', color: 'bg-blue-500', icon: <Clock className="w-4 h-4" /> },
-        { value: 'Completed', label: 'Completed', color: 'bg-green-500', icon: <CheckCircle className="w-4 h-4" /> }
+        { value: 'Pending', label: 'Pending', color: 'bg-amber-500', icon: <AlertCircle className="w-3.5 h-3.5" /> },
+        { value: 'In Progress', label: 'In Progress', color: 'bg-blue-500', icon: <Clock className="w-3.5 h-3.5" /> },
+        { value: 'Completed', label: 'Completed', color: 'bg-green-500', icon: <CheckCircle className="w-3.5 h-3.5" /> }
     ];
 
     return (
@@ -987,7 +987,7 @@ const Dashboard = () => {
                                         type="text"
                                         value={editingTask.title}
                                         onChange={(e) => setEditingTask({...editingTask, title: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
+                                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 text-sm"
                                         placeholder="Enter task title"
                                     />
                                 </div>
@@ -1003,13 +1003,13 @@ const Dashboard = () => {
                                             type="date"
                                             value={editingTask.dueDate || ''}
                                             onChange={(e) => setEditingTask({...editingTask, dueDate: e.target.value})}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
+                                            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 text-sm"
                                         />
                                         {editingTask.dueDate && (
                                             <button
                                                 type="button"
                                                 onClick={() => setEditingTask({...editingTask, dueDate: ''})}
-                                                className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 text-sm"
+                                                className="px-3 py-2.5 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 text-sm"
                                             >
                                                 Clear
                                             </button>
@@ -1033,10 +1033,10 @@ const Dashboard = () => {
                                                         : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
                                                 }`}
                                             >
-                                                <div className={`p-2 rounded-full ${editingTask.status === option.value ? 'bg-white/20' : option.color} mb-2`}>
+                                                <div className={`p-1.5 rounded-full ${editingTask.status === option.value ? 'bg-white/20' : option.color} mb-2`}>
                                                     {option.icon}
                                                 </div>
-                                                <span className="text-sm font-medium">{option.label}</span>
+                                                <span className="text-xs font-medium">{option.label}</span>
                                             </button>
                                         ))}
                                     </div>
@@ -1048,7 +1048,7 @@ const Dashboard = () => {
                         <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200">
                             <button
                                 onClick={() => setEditingTask(null)}
-                                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                             >
                                 Cancel
                             </button>
@@ -1058,7 +1058,7 @@ const Dashboard = () => {
                                     status: editingTask.status,
                                     dueDate: editingTask.dueDate
                                 })}
-                                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-colors shadow-sm"
+                                className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm rounded-lg hover:from-blue-600 hover:to-blue-700 transition-colors shadow-sm"
                             >
                                 Save Changes
                             </button>
@@ -1078,19 +1078,19 @@ const Dashboard = () => {
                             <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
                                 Delete Task
                             </h3>
-                            <p className="text-gray-500 text-center mb-6">
+                            <p className="text-gray-500 text-sm text-center mb-6">
                                 Are you sure you want to delete this task? This action cannot be undone.
                             </p>
                             <div className="flex items-center justify-center space-x-3">
                                 <button
                                     onClick={() => setTaskToDelete(null)}
-                                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                                    className="px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={() => deleteTask(taskToDelete)}
-                                    className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-colors shadow-sm"
+                                    className="px-4 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm rounded-lg hover:from-red-600 hover:to-red-700 transition-colors shadow-sm"
                                 >
                                     Delete Task
                                 </button>
@@ -1101,8 +1101,8 @@ const Dashboard = () => {
             )}
 
             {/* Header */}
-            <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sticky top-0 z-30">
-                <div className="flex items-center justify-between">
+            <div className="bg-white border-b border-gray-200 px-5 py-3.5 sticky top-0 z-30">
+                <div className="flex items-center justify-between max-w-7xl mx-auto">
                     <div className="flex items-center space-x-3">
                         {/* Mobile Menu Button */}
                         <button 
@@ -1112,13 +1112,13 @@ const Dashboard = () => {
                             <Menu className="w-5 h-5 text-gray-600" />
                         </button>
                         
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-2.5">
                             <div className="p-1.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg">
                                 <Target className="w-4 h-4 text-white" />
                             </div>
                             <div>
                                 <h1 className="text-base font-semibold text-gray-900">Taskly</h1>
-                                <p className="text-gray-500 text-xs hidden sm:block">Dashboard</p>
+                                <p className="text-gray-500 text-xs">Dashboard</p>
                             </div>
                         </div>
                     </div>
@@ -1131,7 +1131,7 @@ const Dashboard = () => {
                             <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-white rounded-full"></span>
                         </button>
 
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2.5">
                             <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
                                 {user?.name?.charAt(0) || 'U'}
                             </div>
@@ -1179,7 +1179,7 @@ const Dashboard = () => {
                     
                     <button
                         onClick={logout}
-                        className="w-full flex items-center justify-center space-x-2 px-4 py-2 text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-lg transition-colors"
+                        className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-lg transition-colors"
                     >
                         <LogOut className="w-4 h-4" />
                         <span>Logout</span>
@@ -1187,24 +1187,24 @@ const Dashboard = () => {
                 </div>
                 
                 <div className="p-4">
-                    <button className="w-full flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                    <button className="w-full flex items-center space-x-2 px-3 py-2.5 text-gray-700 hover:bg-gray-100 rounded-lg">
                         <Bell className="w-4 h-4" />
                         <span>Notifications</span>
                     </button>
                 </div>
             </div>
 
-            <div className="p-4 sm:p-6">
+            <div className="p-5 max-w-7xl mx-auto">
                 {/* Welcome Section */}
                 <div className="mb-6">
-                    <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-1">
                         Welcome back, <span className="text-blue-600">{user?.name}!</span>
                     </h2>
                     <p className="text-gray-600 text-sm">Here's your task overview for today.</p>
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 mb-7">
                     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                         <div className="flex items-center justify-between">
                             <div>
@@ -1212,7 +1212,7 @@ const Dashboard = () => {
                                 <p className="text-lg font-bold text-gray-900 mt-1">{total}</p>
                             </div>
                             <div className="p-2 bg-blue-50 rounded-lg">
-                                <List className="w-5 h-5 text-blue-600" />
+                                <List className="w-4 h-4 text-blue-600" />
                             </div>
                         </div>
                     </div>
@@ -1224,7 +1224,7 @@ const Dashboard = () => {
                                 <p className="text-lg font-bold text-gray-900 mt-1">{completed}</p>
                             </div>
                             <div className="p-2 bg-green-50 rounded-lg">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
+                                <CheckCircle className="w-4 h-4 text-green-600" />
                             </div>
                         </div>
                     </div>
@@ -1236,7 +1236,7 @@ const Dashboard = () => {
                                 <p className="text-lg font-bold text-gray-900 mt-1">{inProgress}</p>
                             </div>
                             <div className="p-2 bg-amber-50 rounded-lg">
-                                <Clock className="w-5 h-5 text-amber-600" />
+                                <Clock className="w-4 h-4 text-amber-600" />
                             </div>
                         </div>
                     </div>
@@ -1248,7 +1248,7 @@ const Dashboard = () => {
                                 <p className="text-lg font-bold text-gray-900 mt-1">{percentage}%</p>
                             </div>
                             <div className="p-2 bg-purple-50 rounded-lg">
-                                <div className="w-5 h-5 text-purple-600 font-bold text-sm flex items-center justify-center">%</div>
+                                <div className="w-4 h-4 text-purple-600 font-bold text-sm flex items-center justify-center">%</div>
                             </div>
                         </div>
                         <div className="mt-3">
@@ -1266,28 +1266,28 @@ const Dashboard = () => {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     {/* Toolbar */}
                     <div className="p-4 border-b border-gray-200">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
-                            <div className="flex flex-col xs:flex-row items-start xs:items-center space-y-2 xs:space-y-0 xs:space-x-2 w-full">
-                                <div className="relative w-full xs:w-56">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div className="flex flex-col xs:flex-row items-start xs:items-center gap-2 w-full sm:w-auto">
+                                <div className="relative w-full xs:w-48">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5" />
                                     <input
                                         type="text"
                                         placeholder="Search tasks..."
-                                        className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none w-full text-gray-900 placeholder-gray-500 text-sm"
+                                        className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none w-full text-gray-900 placeholder-gray-500 text-sm h-9"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
                                 </div>
 
-                                <div className="relative w-full xs:w-40">
+                                <div className="relative w-full xs:w-36">
                                     <button
                                         onClick={() => setShowFilterDropdown(!showFilterDropdown)}
                                         className="flex items-center justify-between px-3 py-2 text-white 
                                                     bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700
-                                                    rounded-lg text-sm shadow-sm w-full"
+                                                    rounded-lg text-xs shadow-sm w-full h-9"
                                     >
                                         <div className="flex items-center space-x-1.5">
-                                            <Filter className="w-4 h-4 text-white" />
+                                            <Filter className="w-3.5 h-3.5 text-white" />
                                             <span className="truncate">
                                                 {filterStatus === 'All' ? 'All Status' : filterStatus}
                                             </span>
@@ -1304,7 +1304,7 @@ const Dashboard = () => {
                                                         setFilterStatus(status);
                                                         setShowFilterDropdown(false);
                                                     }}
-                                                    className={`w-full px-3 py-2 text-left flex items-center justify-between text-sm
+                                                    className={`w-full px-3 py-2 text-left flex items-center justify-between text-xs
                                                         ${filterStatus === status 
                                                             ? 'bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700' 
                                                             : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -1325,38 +1325,38 @@ const Dashboard = () => {
                             <div className="flex items-center space-x-2 w-full xs:w-auto">
                                 <button
                                     onClick={() => setView('list')}
-                                    className={`flex-1 xs:flex-none px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-sm shadow-sm
+                                    className={`flex-1 xs:flex-none px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-xs shadow-sm h-9
                                         ${view === 'list'
                                             ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
-                                    <List className="w-4 h-4" />
+                                    <List className="w-3.5 h-3.5" />
                                     <span>List</span>
                                 </button>
                                 <button
                                     onClick={() => setView('calendar')}
-                                    className={`flex-1 xs:flex-none px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-sm shadow-sm
+                                    className={`flex-1 xs:flex-none px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-xs shadow-sm h-9
                                         ${view === 'calendar'
                                             ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
-                                    <Calendar className="w-4 h-4" />
+                                    <Calendar className="w-3.5 h-3.5" />
                                     <span>Calendar</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    {/* Add Task Form - FIXED */}
+                    {/* Add Task Form */}
                     <form onSubmit={addTask} className="p-4 border-b border-gray-200">
                         <div className="space-y-3">
                             <div className="w-full">
                                 <input
                                     type="text"
                                     placeholder="What needs to be done?"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 placeholder-gray-500 text-sm"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900 placeholder-gray-500 text-sm h-9"
                                     value={newTask.title}
                                     onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
                                     required
@@ -1364,12 +1364,12 @@ const Dashboard = () => {
                                 />
                             </div>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                                {/* Fixed Date Input Container */}
-                                <div className="relative w-full group">
+                                {/* Date Input Container */}
+                                <div className="relative w-full">
                                     <div className="relative">
                                         <input
                                             type="date"
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 appearance-none"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 h-9"
                                             value={newTask.dueDate}
                                             onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
                                             disabled={isAddingTask}
@@ -1377,15 +1377,14 @@ const Dashboard = () => {
                                             onBlur={(e) => {
                                                 if (!e.target.value) e.target.type = 'text';
                                             }}
-                                            placeholder="DD/MM/YYYY"
                                         />
                                         {/* Custom placeholder */}
                                         {!newTask.dueDate && (
                                             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-sm">
-                                                DD/MM/YYYY
+                                                dd/MM/yyyy
                                             </div>
                                         )}
-                                        {/* Clear button - fixed positioning */}
+                                        {/* Clear button */}
                                         {newTask.dueDate && (
                                             <button
                                                 type="button"
@@ -1393,14 +1392,14 @@ const Dashboard = () => {
                                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                                                 aria-label="Clear date"
                                             >
-                                                <X className="w-4 h-4" />
+                                                <X className="w-3.5 h-3.5" />
                                             </button>
                                         )}
                                     </div>
                                 </div>
                                 
                                 <select
-                                    className="w-full sm:w-32 px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900"
+                                    className="w-full sm:w-32 px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 h-9"
                                     value={newTask.status}
                                     onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
                                     disabled={isAddingTask}
@@ -1413,16 +1412,16 @@ const Dashboard = () => {
                                 <button
                                     type="submit"
                                     disabled={isAddingTask}
-                                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm shadow-sm"
+                                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-xs shadow-sm h-9"
                                 >
                                     {isAddingTask ? (
                                         <>
-                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                            <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                             <span>Adding...</span>
                                         </>
                                     ) : (
                                         <>
-                                            <Plus className="w-4 h-4" />
+                                            <Plus className="w-3.5 h-3.5" />
                                             <span>Add Task</span>
                                         </>
                                     )}
@@ -1449,7 +1448,7 @@ const Dashboard = () => {
                             {filteredTasks.length === 0 ? (
                                 <div className="text-center py-8">
                                     <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
-                                        <List className="w-6 h-6 text-gray-400" />
+                                        <List className="w-5 h-5 text-gray-400" />
                                     </div>
                                     <h4 className="text-gray-900 font-medium text-sm mb-1">No tasks found</h4>
                                     <p className="text-gray-500 text-xs">
@@ -1471,14 +1470,14 @@ const Dashboard = () => {
                                                             task._id,
                                                             task.status === 'Completed' ? 'Pending' : 'Completed'
                                                         )}
-                                                        className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                                                        className={`w-4.5 h-4.5 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 ${
                                                             task.status === 'Completed'
                                                                 ? 'bg-gradient-to-r from-teal-500 to-teal-600 border-teal-600'
                                                                 : 'border-gray-300 hover:border-teal-500'
                                                         }`}
                                                     >
                                                         {task.status === 'Completed' && (
-                                                            <CheckCircle className="w-3 h-3 text-white" />
+                                                            <CheckCircle className="w-2.5 h-2.5 text-white" />
                                                         )}
                                                     </button>
 
@@ -1493,7 +1492,7 @@ const Dashboard = () => {
                                                             </span>
                                                             {task.dueDate && (
                                                                 <span className="text-xs text-gray-500 flex items-center bg-gray-50 px-2 py-1 rounded">
-                                                                    <Clock className="w-3 h-3 mr-1" />
+                                                                    <Clock className="w-2.5 h-2.5 mr-1" />
                                                                     Due: {format(new Date(task.dueDate), 'MMM d, yyyy')}
                                                                 </span>
                                                             )}
@@ -1507,20 +1506,20 @@ const Dashboard = () => {
                                                         onClick={() => setActiveTaskMenu(activeTaskMenu === task._id ? null : task._id)}
                                                         className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                                     >
-                                                        <MoreVertical className="w-4 h-4" />
+                                                        <MoreVertical className="w-3.5 h-3.5" />
                                                     </button>
 
                                                     {/* Dropdown menu */}
                                                     {activeTaskMenu === task._id && (
-                                                        <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                                        <div className="absolute right-0 top-full mt-1 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                                             <button 
                                                                 onClick={() => {
                                                                     setEditingTask(task);
                                                                     setActiveTaskMenu(null);
                                                                 }}
-                                                                className="w-full px-4 py-2.5 text-left flex items-center space-x-2.5 text-sm text-blue-600 hover:bg-blue-50 hover:text-blue-700 border-b border-gray-100"
+                                                                className="w-full px-3 py-2.5 text-left flex items-center space-x-2 text-xs text-blue-600 hover:bg-blue-50 hover:text-blue-700 border-b border-gray-100"
                                                             >
-                                                                <Edit className="w-4 h-4" />
+                                                                <Edit className="w-3.5 h-3.5" />
                                                                 <span>Edit Task</span>
                                                             </button>
                                                             
@@ -1529,9 +1528,9 @@ const Dashboard = () => {
                                                                     setTaskToDelete(task._id);
                                                                     setActiveTaskMenu(null);
                                                                 }}
-                                                                className="w-full px-4 py-2.5 text-left flex items-center space-x-2.5 text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+                                                                className="w-full px-3 py-2.5 text-left flex items-center space-x-2 text-xs text-red-600 hover:bg-red-50 hover:text-red-700"
                                                             >
-                                                                <Trash2 className="w-4 h-4" />
+                                                                <Trash2 className="w-3.5 h-3.5" />
                                                                 <span>Delete Task</span>
                                                             </button>
                                                         </div>
@@ -1547,10 +1546,10 @@ const Dashboard = () => {
                         <div className="p-4">
                             <CalendarView tasks={tasks.filter(t => t.dueDate)} />
                             {tasks.filter(t => !t.dueDate).length > 0 && (
-                                <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                                     <div className="flex items-center">
-                                        <AlertCircle className="w-5 h-5 text-amber-600 mr-2 flex-shrink-0" />
-                                        <p className="text-sm text-amber-700">
+                                        <AlertCircle className="w-4 h-4 text-amber-600 mr-2 flex-shrink-0" />
+                                        <p className="text-xs text-amber-700">
                                             {tasks.filter(t => !t.dueDate).length} tasks without due dates are not shown on the calendar.
                                         </p>
                                     </div>
@@ -1561,7 +1560,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Quick Stats Footer */}
-                <div className="mt-4 text-center text-gray-500 text-xs">
+                <div className="mt-5 text-center text-gray-500 text-xs">
                     <p>You have {pending} pending tasks and {completed} completed tasks.</p>
                     {tasks.filter(t => t.dueDate).length > 0 && (
                         <p className="mt-1">{tasks.filter(t => t.dueDate).length} tasks have due dates.</p>
