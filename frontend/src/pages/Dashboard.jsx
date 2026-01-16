@@ -1101,7 +1101,7 @@ const Dashboard = () => {
             )}
 
             {/* Header */}
-            <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3">
+            <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sticky top-0 z-30">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         {/* Mobile Menu Button */}
@@ -1118,7 +1118,7 @@ const Dashboard = () => {
                             </div>
                             <div>
                                 <h1 className="text-base font-semibold text-gray-900">Taskly</h1>
-                                <p className="text-gray-500 text-xs hidden xs:block">Dashboard</p>
+                                <p className="text-gray-500 text-xs hidden sm:block">Dashboard</p>
                             </div>
                         </div>
                     </div>
@@ -1204,51 +1204,51 @@ const Dashboard = () => {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-                    <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-gray-500 text-xs font-medium">Total Tasks</p>
-                                <p className="text-lg sm:text-xl font-bold text-gray-900 mt-1">{total}</p>
+                                <p className="text-lg font-bold text-gray-900 mt-1">{total}</p>
                             </div>
                             <div className="p-2 bg-blue-50 rounded-lg">
-                                <List className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                                <List className="w-5 h-5 text-blue-600" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-gray-500 text-xs font-medium">Completed</p>
-                                <p className="text-lg sm:text-xl font-bold text-gray-900 mt-1">{completed}</p>
+                                <p className="text-lg font-bold text-gray-900 mt-1">{completed}</p>
                             </div>
                             <div className="p-2 bg-green-50 rounded-lg">
-                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                                <CheckCircle className="w-5 h-5 text-green-600" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-gray-500 text-xs font-medium">In Progress</p>
-                                <p className="text-lg sm:text-xl font-bold text-gray-900 mt-1">{inProgress}</p>
+                                <p className="text-lg font-bold text-gray-900 mt-1">{inProgress}</p>
                             </div>
                             <div className="p-2 bg-amber-50 rounded-lg">
-                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+                                <Clock className="w-5 h-5 text-amber-600" />
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100 col-span-2 lg:col-span-1">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-gray-500 text-xs font-medium">Completion</p>
-                                <p className="text-lg sm:text-xl font-bold text-gray-900 mt-1">{percentage}%</p>
+                                <p className="text-lg font-bold text-gray-900 mt-1">{percentage}%</p>
                             </div>
                             <div className="p-2 bg-purple-50 rounded-lg">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 font-bold text-sm">%</div>
+                                <div className="w-5 h-5 text-purple-600 font-bold text-sm flex items-center justify-center">%</div>
                             </div>
                         </div>
                         <div className="mt-3">
@@ -1267,34 +1267,36 @@ const Dashboard = () => {
                     {/* Toolbar */}
                     <div className="p-4 border-b border-gray-200">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
-                            <div className="flex flex-col xs:flex-row items-start xs:items-center space-y-2 xs:space-y-0 xs:space-x-2 w-full sm:w-auto">
-                                <div className="relative w-full xs:w-auto">
+                            <div className="flex flex-col xs:flex-row items-start xs:items-center space-y-2 xs:space-y-0 xs:space-x-2 w-full">
+                                <div className="relative w-full xs:w-56">
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                                     <input
                                         type="text"
                                         placeholder="Search tasks..."
-                                        className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none w-full xs:w-56 text-gray-900 placeholder-gray-500 text-sm"
+                                        className="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none w-full text-gray-900 placeholder-gray-500 text-sm"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
                                 </div>
 
-                                <div className="relative w-full xs:w-auto">
+                                <div className="relative w-full xs:w-40">
                                     <button
                                         onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-                                        className="flex items-center justify-center xs:justify-start space-x-1.5 px-3 py-2 text-white 
+                                        className="flex items-center justify-between px-3 py-2 text-white 
                                                     bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700
-                                                    rounded-lg text-sm shadow-sm w-full xs:w-auto"
+                                                    rounded-lg text-sm shadow-sm w-full"
                                     >
-                                        <Filter className="w-4 h-4 text-white" />
-                                        <span className="truncate">
-                                            {filterStatus === 'All' ? 'All Status' : filterStatus}
-                                        </span>
+                                        <div className="flex items-center space-x-1.5">
+                                            <Filter className="w-4 h-4 text-white" />
+                                            <span className="truncate">
+                                                {filterStatus === 'All' ? 'All Status' : filterStatus}
+                                            </span>
+                                        </div>
                                         <ChevronDown className="w-3 h-3 text-white" />
                                     </button>
 
                                     {showFilterDropdown && (
-                                        <div className="absolute top-full mt-1 w-full xs:w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                        <div className="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                             {['All', 'Pending', 'In Progress', 'Completed'].map((status) => (
                                                 <button
                                                     key={status}
@@ -1323,10 +1325,10 @@ const Dashboard = () => {
                             <div className="flex items-center space-x-2 w-full xs:w-auto">
                                 <button
                                     onClick={() => setView('list')}
-                                    className={`flex-1 xs:flex-none px-3 py-1.5 rounded-lg flex items-center justify-center space-x-1.5 text-sm shadow-sm
+                                    className={`flex-1 xs:flex-none px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-sm shadow-sm
                                         ${view === 'list'
                                             ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                                            : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white opacity-80 hover:opacity-100'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
                                     <List className="w-4 h-4" />
@@ -1334,10 +1336,10 @@ const Dashboard = () => {
                                 </button>
                                 <button
                                     onClick={() => setView('calendar')}
-                                    className={`flex-1 xs:flex-none px-3 py-1.5 rounded-lg flex items-center justify-center space-x-1.5 text-sm shadow-sm
+                                    className={`flex-1 xs:flex-none px-4 py-2 rounded-lg flex items-center justify-center space-x-2 text-sm shadow-sm
                                         ${view === 'calendar'
                                             ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                                            : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white opacity-80 hover:opacity-100'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
                                     <Calendar className="w-4 h-4" />
@@ -1347,9 +1349,9 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* Add Task Form - FIXED Date Input */}
+                    {/* Add Task Form - FIXED */}
                     <form onSubmit={addTask} className="p-4 border-b border-gray-200">
-                        <div className="flex flex-col space-y-3">
+                        <div className="space-y-3">
                             <div className="w-full">
                                 <input
                                     type="text"
@@ -1361,42 +1363,44 @@ const Dashboard = () => {
                                     disabled={isAddingTask}
                                 />
                             </div>
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                                 {/* Fixed Date Input Container */}
                                 <div className="relative w-full group">
-                                    <input
-                                        type="date"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 appearance-none"
-                                        value={newTask.dueDate}
-                                        onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                                        disabled={isAddingTask}
-                                        onFocus={(e) => e.target.type = 'date'}
-                                        onBlur={(e) => {
-                                            if (!e.target.value) e.target.type = 'text';
-                                        }}
-                                        placeholder="DD/MM/YYYY"
-                                    />
-                                    {/* Custom placeholder */}
-                                    {!newTask.dueDate && (
-                                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-sm">
-                                            DD/MM/YYYY
-                                        </div>
-                                    )}
-                                    {/* Clear button - fixed positioning */}
-                                    {newTask.dueDate && (
-                                        <button
-                                            type="button"
-                                            onClick={() => setNewTask({...newTask, dueDate: ''})}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
-                                            aria-label="Clear date"
-                                        >
-                                            <X className="w-4 h-4" />
-                                        </button>
-                                    )}
+                                    <div className="relative">
+                                        <input
+                                            type="date"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 appearance-none"
+                                            value={newTask.dueDate}
+                                            onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                                            disabled={isAddingTask}
+                                            onFocus={(e) => e.target.type = 'date'}
+                                            onBlur={(e) => {
+                                                if (!e.target.value) e.target.type = 'text';
+                                            }}
+                                            placeholder="DD/MM/YYYY"
+                                        />
+                                        {/* Custom placeholder */}
+                                        {!newTask.dueDate && (
+                                            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-sm">
+                                                DD/MM/YYYY
+                                            </div>
+                                        )}
+                                        {/* Clear button - fixed positioning */}
+                                        {newTask.dueDate && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setNewTask({...newTask, dueDate: ''})}
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                                aria-label="Clear date"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                                 
                                 <select
-                                    className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900"
+                                    className="w-full sm:w-32 px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900"
                                     value={newTask.status}
                                     onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
                                     disabled={isAddingTask}
@@ -1405,10 +1409,11 @@ const Dashboard = () => {
                                     <option value="In Progress">In Progress</option>
                                     <option value="Completed">Completed</option>
                                 </select>
+                                
                                 <button
                                     type="submit"
                                     disabled={isAddingTask}
-                                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-1.5 text-sm shadow-sm"
+                                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm shadow-sm"
                                 >
                                     {isAddingTask ? (
                                         <>
@@ -1432,8 +1437,8 @@ const Dashboard = () => {
                     {/* Conditional Rendering for List vs Calendar View */}
                     {view === 'list' ? (
                         <div className="p-4">
-                            <div className="mb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
-                                <h3 className="text-base font-semibold text-gray-900">
+                            <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                                <h3 className="text-base font-semibold text-gray-900 mb-2 sm:mb-0">
                                     Your Tasks ({filteredTasks.length})
                                 </h3>
                                 <p className="text-xs text-gray-500">
@@ -1452,14 +1457,14 @@ const Dashboard = () => {
                                     </p>
                                 </div>
                             ) : (
-                                <div className="space-y-2">
+                                <div className="space-y-3">
                                     {filteredTasks.map((task) => (
                                         <div
                                             key={task._id}
-                                            className="group bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-all duration-200 hover:border-blue-200 relative"
+                                            className="group bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-all duration-200 hover:border-blue-200"
                                         >
                                             <div className="flex items-start justify-between">
-                                                <div className="flex items-start flex-1 min-w-0">
+                                                <div className="flex items-start flex-1 min-w-0 mr-3">
                                                     {/* Task checkbox */}
                                                     <button
                                                         onClick={() => updateTaskStatus(
@@ -1478,10 +1483,10 @@ const Dashboard = () => {
                                                     </button>
 
                                                     <div className="ml-3 flex-1 min-w-0">
-                                                        <h4 className={`font-medium text-gray-900 text-sm ${task.status === 'Completed' ? 'line-through text-gray-500' : ''}`}>
+                                                        <h4 className={`font-medium text-gray-900 text-sm mb-2 ${task.status === 'Completed' ? 'line-through text-gray-500' : ''}`}>
                                                             {task.title}
                                                         </h4>
-                                                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                                                        <div className="flex flex-wrap items-center gap-2">
                                                             <span className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
                                                                 {getStatusIcon(task.status)}
                                                                 <span>{task.status}</span>
@@ -1496,8 +1501,8 @@ const Dashboard = () => {
                                                     </div>
                                                 </div>
 
-                                                {/* Fixed: Action menu button moved to right side */}
-                                                <div className="relative">
+                                                {/* Action menu button */}
+                                                <div className="relative flex-shrink-0">
                                                     <button
                                                         onClick={() => setActiveTaskMenu(activeTaskMenu === task._id ? null : task._id)}
                                                         className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
@@ -1505,7 +1510,7 @@ const Dashboard = () => {
                                                         <MoreVertical className="w-4 h-4" />
                                                     </button>
 
-                                                    {/* Fixed: Dropdown menu positioned to the right with correct colors */}
+                                                    {/* Dropdown menu */}
                                                     {activeTaskMenu === task._id && (
                                                         <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                                             <button 
