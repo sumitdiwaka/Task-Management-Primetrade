@@ -7,13 +7,18 @@ import {
     Clock, AlertCircle, User, Bell, Target, X
 } from 'lucide-react';
 import { format } from 'date-fns';
+import CalendarView from '../components/CalendarView';
 
 const Dashboard = () => {
     const { user, logout } = useContext(AuthContext);
     const [tasks, setTasks] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
-    const [newTask, setNewTask] = useState({ title: '', status: 'Pending' });
+    const [newTask, setNewTask] = useState({ 
+        title: '', 
+        status: 'Pending',
+        dueDate: '' // EMPTY by default - user must choose
+    });
     const [view, setView] = useState('list');
     const [isAddingTask, setIsAddingTask] = useState(false);
     const [showFilterDropdown, setShowFilterDropdown] = useState(false);
@@ -25,7 +30,12 @@ const Dashboard = () => {
     const fetchTasks = async () => {
         try {
             const { data } = await API.get('/tasks');
-            setTasks(data);
+            // Ensure dueDate is properly formatted
+            const formattedData = data.map(task => ({
+                ...task,
+                dueDate: task.dueDate ? task.dueDate.split('T')[0] : ''
+            }));
+            setTasks(formattedData);
         } catch (err) {
             console.error("Error fetching tasks", err);
         }
@@ -61,24 +71,33 @@ const Dashboard = () => {
                 _id: tempId,
                 title: newTask.title,
                 status: newTask.status,
+                dueDate: newTask.dueDate || null, // Allow empty due date
                 createdAt: new Date().toISOString(),
                 isTemp: true
             };
 
             // Add to local state immediately (optimistic update)
             setTasks(prev => [tempTask, ...prev]);
-            setNewTask({ title: '', status: 'Pending' });
+            setNewTask({ 
+                title: '', 
+                status: 'Pending',
+                dueDate: '' // Reset to empty
+            });
 
             // Send to backend
             const response = await API.post('/tasks', {
                 title: newTask.title,
-                status: newTask.status
+                status: newTask.status,
+                dueDate: newTask.dueDate || null
             });
 
             // Replace temp task with real task from backend
             setTasks(prev =>
                 prev.map(task =>
-                    task._id === tempId ? response.data : task
+                    task._id === tempId ? {
+                        ...response.data,
+                        dueDate: response.data.dueDate ? response.data.dueDate.split('T')[0] : ''
+                    } : task
                 )
             );
 
@@ -131,14 +150,21 @@ const Dashboard = () => {
         try {
             // Optimistic Update
             setTasks(prev => prev.map(t => 
-                t._id === id ? { ...t, ...updates } : t
+                t._id === id ? { 
+                    ...t, 
+                    ...updates,
+                    dueDate: updates.dueDate || '' // Ensure empty string if no due date
+                } : t
             ));
             
             // Close edit modal
             setEditingTask(null);
             
             // Backend Update
-            await API.put(`/tasks/${id}`, updates);
+            await API.put(`/tasks/${id}`, {
+                ...updates,
+                dueDate: updates.dueDate || null // Send null for empty due date
+            });
         } catch (err) {
             console.error("Error updating task", err);
             fetchTasks(); // Revert on error
@@ -209,6 +235,31 @@ const Dashboard = () => {
                                     />
                                 </div>
 
+                                {/* Due Date - Optional */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Due Date (Optional)
+                                        <span className="text-gray-500 text-xs ml-1">- Clear to remove due date</span>
+                                    </label>
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="date"
+                                            value={editingTask.dueDate || ''}
+                                            onChange={(e) => setEditingTask({...editingTask, dueDate: e.target.value})}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
+                                        />
+                                        {editingTask.dueDate && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setEditingTask({...editingTask, dueDate: ''})}
+                                                className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 text-sm"
+                                            >
+                                                Clear
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
                                 {/* Status Selection */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -247,7 +298,8 @@ const Dashboard = () => {
                             <button
                                 onClick={() => updateTask(editingTask._id, {
                                     title: editingTask.title,
-                                    status: editingTask.status
+                                    status: editingTask.status,
+                                    dueDate: editingTask.dueDate
                                 })}
                                 className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-colors shadow-sm"
                             >
@@ -487,9 +539,9 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* Add Task Form */}
+                    {/* Add Task Form - Updated with Optional Due Date */}
                     <form onSubmit={addTask} className="p-4 border-b border-gray-200">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex flex-col md:flex-row items-start md:items-center space-y-3 md:space-y-0 md:space-x-2">
                             <div className="flex-1">
                                 <input
                                     type="text"
@@ -501,157 +553,192 @@ const Dashboard = () => {
                                     disabled={isAddingTask}
                                 />
                             </div>
-                            <select
-                                className="px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900"
-                                value={newTask.status}
-                                onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
-                                disabled={isAddingTask}
-                            >
-                                <option value="Pending">Pending</option>
-                                <option value="In Progress">In Progress</option>
-                                <option value="Completed">Completed</option>
-                            </select>
-                            <button
-                                type="submit"
-                                disabled={isAddingTask}
-                                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center space-x-1.5 text-sm shadow-sm"
-                            >
-                                {isAddingTask ? (
-                                    <>
-                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                        <span>Adding...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Plus className="w-4 h-4" />
-                                        <span>Add Task</span>
-                                    </>
-                                )}
-                            </button>
+                            <div className="flex items-center space-x-2 w-full md:w-auto">
+                                <div className="relative">
+                                    <input
+                                        type="date"
+                                        className="px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 w-full md:w-40"
+                                        value={newTask.dueDate}
+                                        onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                                        disabled={isAddingTask}
+                                    />
+                                    {newTask.dueDate && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setNewTask({...newTask, dueDate: ''})}
+                                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-500 hover:text-red-700"
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </button>
+                                    )}
+                                </div>
+                                <select
+                                    className="px-3 py-2 border border-gray-300 rounded-lg bg-white outline-none text-sm text-gray-900 w-full md:w-auto"
+                                    value={newTask.status}
+                                    onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
+                                    disabled={isAddingTask}
+                                >
+                                    <option value="Pending">Pending</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                                <button
+                                    type="submit"
+                                    disabled={isAddingTask}
+                                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center space-x-1.5 text-sm shadow-sm w-full md:w-auto justify-center"
+                                >
+                                    {isAddingTask ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                            <span>Adding...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Plus className="w-4 h-4" />
+                                            <span>Add Task</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                        <div className="mt-2 text-xs text-gray-500">
+                            Due date is optional. Leave empty if no due date needed.
                         </div>
                     </form>
 
-                    {/* Tasks List */}
-                    <div className="p-4">
-                        <div className="mb-3 flex items-center justify-between">
-                            <h3 className="text-base font-semibold text-gray-900">
-                                Your Tasks ({filteredTasks.length})
-                            </h3>
-                            <p className="text-xs text-gray-500">
-                                Showing {filterStatus === 'All' ? 'all' : filterStatus.toLowerCase()} tasks
-                            </p>
-                        </div>
-
-                        {filteredTasks.length === 0 ? (
-                            <div className="text-center py-8">
-                                <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
-                                    <List className="w-6 h-6 text-gray-400" />
-                                </div>
-                                <h4 className="text-gray-900 font-medium text-sm mb-1">No tasks found</h4>
-                                <p className="text-gray-500 text-xs">
-                                    {searchTerm ? 'Try a different search term' : 'Get started by adding your first task'}
+                    {/* Conditional Rendering for List vs Calendar View */}
+                    {view === 'list' ? (
+                        <div className="p-4">
+                            <div className="mb-3 flex items-center justify-between">
+                                <h3 className="text-base font-semibold text-gray-900">
+                                    Your Tasks ({filteredTasks.length})
+                                </h3>
+                                <p className="text-xs text-gray-500">
+                                    Showing {filterStatus === 'All' ? 'all' : filterStatus.toLowerCase()} tasks
                                 </p>
                             </div>
-                        ) : (
-                            <div className="space-y-2">
-                                {filteredTasks.map((task) => (
-                                    <div
-                                        key={task._id}
-                                        className="group bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-all duration-200 hover:border-blue-200"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center space-x-3 flex-1">
-                                                {/* Task checkbox */}
-                                                <button
-                                                    onClick={() => updateTaskStatus(
-                                                        task._id,
-                                                        task.status === 'Completed' ? 'Pending' : 'Completed'
-                                                    )}
-                                                    className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 ${task.status === 'Completed'
-                                                            ? 'bg-gradient-to-r from-teal-500 to-teal-600 border-teal-600'
-                                                            : 'border-gray-300 hover:border-teal-500'
-                                                        }`}
-                                                >
-                                                    {task.status === 'Completed' && (
-                                                        <CheckCircle className="w-3 h-3 text-white" />
-                                                    )}
-                                                </button>
 
-                                                <div className="flex-1 min-w-0">
-                                                    <h4 className={`font-medium text-gray-900 text-sm truncate ${task.status === 'Completed' ? 'line-through text-gray-500' : ''
-                                                        }`}>
-                                                        {task.title}
-                                                    </h4>
-                                                    {task.description && (
-                                                        <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
-                                                            {task.description}
-                                                        </p>
-                                                    )}
-                                                </div>
+                            {filteredTasks.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <List className="w-6 h-6 text-gray-400" />
+                                    </div>
+                                    <h4 className="text-gray-900 font-medium text-sm mb-1">No tasks found</h4>
+                                    <p className="text-gray-500 text-xs">
+                                        {searchTerm ? 'Try a different search term' : 'Get started by adding your first task'}
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="space-y-2">
+                                    {filteredTasks.map((task) => (
+                                        <div
+                                            key={task._id}
+                                            className="group bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-all duration-200 hover:border-blue-200"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center space-x-3 flex-1">
+                                                    {/* Task checkbox */}
+                                                    <button
+                                                        onClick={() => updateTaskStatus(
+                                                            task._id,
+                                                            task.status === 'Completed' ? 'Pending' : 'Completed'
+                                                        )}
+                                                        className={`w-5 h-5 rounded border flex items-center justify-center flex-shrink-0 ${task.status === 'Completed'
+                                                                ? 'bg-gradient-to-r from-teal-500 to-teal-600 border-teal-600'
+                                                                : 'border-gray-300 hover:border-teal-500'
+                                                            }`}
+                                                    >
+                                                        {task.status === 'Completed' && (
+                                                            <CheckCircle className="w-3 h-3 text-white" />
+                                                        )}
+                                                    </button>
 
-                                                <div className="flex items-center space-x-2">
-                                                    <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
-                                                        {getStatusIcon(task.status)}
-                                                        <span>{task.status}</span>
-                                                    </span>
-
-                                                    {task.dueDate && (
-                                                        <span className="text-xs text-gray-500 flex items-center">
-                                                            <Clock className="w-3 h-3 mr-1" />
-                                                            {format(new Date(task.dueDate), 'MMM d')}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="relative">
-                                                <button
-                                                    onClick={() => setActiveTaskMenu(activeTaskMenu === task._id ? null : task._id)}
-                                                    className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    <MoreVertical className="w-4 h-4" />
-                                                </button>
-
-                                                {activeTaskMenu === task._id && (
-                                                    <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                                        {/* Edit Task button */}
-                                                        <button 
-                                                            onClick={() => {
-                                                                setEditingTask(task);
-                                                                setActiveTaskMenu(null);
-                                                            }}
-                                                            className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 hover:from-indigo-100 hover:to-indigo-200"
-                                                        >
-                                                            <Edit className="w-3 h-3" />
-                                                            <span>Edit Task</span>
-                                                        </button>
-                                                        
-                                                        {/* Delete Task button */}
-                                                        <button 
-                                                            onClick={() => {
-                                                                setTaskToDelete(task._id);
-                                                                setActiveTaskMenu(null);
-                                                            }}
-                                                            className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm
-                                                                bg-gradient-to-r from-rose-50 to-rose-100 text-rose-700 hover:from-rose-100 hover:to-rose-200"
-                                                        >
-                                                            <Trash2 className="w-3 h-3" />
-                                                            <span>Delete Task</span>
-                                                        </button>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className={`font-medium text-gray-900 text-sm truncate ${task.status === 'Completed' ? 'line-through text-gray-500' : ''
+                                                            }`}>
+                                                            {task.title}
+                                                        </h4>
+                                                        <div className="flex items-center space-x-3 mt-1">
+                                                            <span className={`inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
+                                                                {getStatusIcon(task.status)}
+                                                                <span>{task.status}</span>
+                                                            </span>
+                                                            {task.dueDate && (
+                                                                <span className="text-xs text-gray-500 flex items-center">
+                                                                    <Clock className="w-3 h-3 mr-1" />
+                                                                    Due: {format(new Date(task.dueDate), 'MMM d, yyyy')}
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                )}
+                                                </div>
+
+                                                <div className="relative">
+                                                    <button
+                                                        onClick={() => setActiveTaskMenu(activeTaskMenu === task._id ? null : task._id)}
+                                                        className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    >
+                                                        <MoreVertical className="w-4 h-4" />
+                                                    </button>
+
+                                                    {activeTaskMenu === task._id && (
+                                                        <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                                            {/* Edit Task button */}
+                                                            <button 
+                                                                onClick={() => {
+                                                                    setEditingTask(task);
+                                                                    setActiveTaskMenu(null);
+                                                                }}
+                                                                className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 hover:from-indigo-100 hover:to-indigo-200"
+                                                            >
+                                                                <Edit className="w-3 h-3" />
+                                                                <span>Edit Task</span>
+                                                            </button>
+                                                            
+                                                            {/* Delete Task button */}
+                                                            <button 
+                                                                onClick={() => {
+                                                                    setTaskToDelete(task._id);
+                                                                    setActiveTaskMenu(null);
+                                                                }}
+                                                                className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm
+                                                                    bg-gradient-to-r from-rose-50 to-rose-100 text-rose-700 hover:from-rose-100 hover:to-rose-200"
+                                                            >
+                                                                <Trash2 className="w-3 h-3" />
+                                                                <span>Delete Task</span>
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="p-4">
+                            <CalendarView tasks={tasks.filter(t => t.dueDate)} />
+                            {tasks.filter(t => !t.dueDate).length > 0 && (
+                                <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                                    <div className="flex items-center">
+                                        <AlertCircle className="w-5 h-5 text-amber-600 mr-2" />
+                                        <p className="text-sm text-amber-700">
+                                            {tasks.filter(t => !t.dueDate).length} tasks without due dates are not shown on the calendar.
+                                        </p>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Quick Stats Footer */}
                 <div className="mt-4 text-center text-gray-500 text-xs">
                     <p>You have {pending} pending tasks and {completed} completed tasks.</p>
+                    {tasks.filter(t => t.dueDate).length > 0 && (
+                        <p className="mt-1">{tasks.filter(t => t.dueDate).length} tasks have due dates.</p>
+                    )}
                 </div>
             </div>
         </div>
