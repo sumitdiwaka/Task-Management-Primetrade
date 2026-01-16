@@ -14,7 +14,11 @@ const taskRoutes = require('./routes/taskRoutes');
 connectDB();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'https://task-management-primetrade.vercel.app', // Paste your URL here
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
 app.use(express.json());
 
 //  routes
