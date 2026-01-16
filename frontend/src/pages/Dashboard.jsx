@@ -1456,7 +1456,7 @@ const Dashboard = () => {
                                     {filteredTasks.map((task) => (
                                         <div
                                             key={task._id}
-                                            className="group bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-all duration-200 hover:border-blue-200"
+                                            className="group bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-all duration-200 hover:border-blue-200 relative"
                                         >
                                             <div className="flex items-start justify-between">
                                                 <div className="flex items-start flex-1 min-w-0">
@@ -1478,20 +1478,9 @@ const Dashboard = () => {
                                                     </button>
 
                                                     <div className="ml-3 flex-1 min-w-0">
-                                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                                                            <h4 className={`font-medium text-gray-900 text-sm ${task.status === 'Completed' ? 'line-through text-gray-500' : ''}`}>
-                                                                {task.title}
-                                                            </h4>
-                                                            {/* Mobile Actions - Always visible on mobile */}
-                                                            <div className="md:hidden mt-1 sm:mt-0">
-                                                                <button
-                                                                    onClick={() => setActiveTaskMenu(activeTaskMenu === task._id ? null : task._id)}
-                                                                    className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
-                                                                >
-                                                                    <MoreVertical className="w-4 h-4" />
-                                                                </button>
-                                                            </div>
-                                                        </div>
+                                                        <h4 className={`font-medium text-gray-900 text-sm ${task.status === 'Completed' ? 'line-through text-gray-500' : ''}`}>
+                                                            {task.title}
+                                                        </h4>
                                                         <div className="flex flex-wrap items-center gap-2 mt-2">
                                                             <span className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
                                                                 {getStatusIcon(task.status)}
@@ -1507,15 +1496,16 @@ const Dashboard = () => {
                                                     </div>
                                                 </div>
 
-                                                {/* Desktop Actions - Visible on hover */}
-                                                <div className="hidden md:block relative ml-2">
+                                                {/* Fixed: Action menu button moved to right side */}
+                                                <div className="relative">
                                                     <button
                                                         onClick={() => setActiveTaskMenu(activeTaskMenu === task._id ? null : task._id)}
-                                                        className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                                     >
                                                         <MoreVertical className="w-4 h-4" />
                                                     </button>
 
+                                                    {/* Fixed: Dropdown menu positioned to the right with correct colors */}
                                                     {activeTaskMenu === task._id && (
                                                         <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                                             <button 
@@ -1523,9 +1513,9 @@ const Dashboard = () => {
                                                                     setEditingTask(task);
                                                                     setActiveTaskMenu(null);
                                                                 }}
-                                                                className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm hover:bg-gray-50 text-gray-700 border-b border-gray-100"
+                                                                className="w-full px-4 py-2.5 text-left flex items-center space-x-2.5 text-sm text-blue-600 hover:bg-blue-50 hover:text-blue-700 border-b border-gray-100"
                                                             >
-                                                                <Edit className="w-3 h-3" />
+                                                                <Edit className="w-4 h-4" />
                                                                 <span>Edit Task</span>
                                                             </button>
                                                             
@@ -1534,41 +1524,14 @@ const Dashboard = () => {
                                                                     setTaskToDelete(task._id);
                                                                     setActiveTaskMenu(null);
                                                                 }}
-                                                                className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm hover:bg-gray-50 text-red-600"
+                                                                className="w-full px-4 py-2.5 text-left flex items-center space-x-2.5 text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
                                                             >
-                                                                <Trash2 className="w-3 h-3" />
+                                                                <Trash2 className="w-4 h-4" />
                                                                 <span>Delete Task</span>
                                                             </button>
                                                         </div>
                                                     )}
                                                 </div>
-
-                                                {/* Mobile Dropdown Menu */}
-                                                {activeTaskMenu === task._id && (
-                                                    <div className="md:hidden absolute right-4 mt-10 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                                        <button 
-                                                            onClick={() => {
-                                                                setEditingTask(task);
-                                                                setActiveTaskMenu(null);
-                                                            }}
-                                                            className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm hover:bg-gray-50 text-gray-700 border-b border-gray-100"
-                                                        >
-                                                            <Edit className="w-3 h-3" />
-                                                            <span>Edit Task</span>
-                                                        </button>
-                                                        
-                                                        <button 
-                                                            onClick={() => {
-                                                                setTaskToDelete(task._id);
-                                                                setActiveTaskMenu(null);
-                                                            }}
-                                                            className="w-full px-3 py-2 text-left flex items-center space-x-1.5 text-sm hover:bg-gray-50 text-red-600"
-                                                        >
-                                                            <Trash2 className="w-3 h-3" />
-                                                            <span>Delete Task</span>
-                                                        </button>
-                                                    </div>
-                                                )}
                                             </div>
                                         </div>
                                     ))}
