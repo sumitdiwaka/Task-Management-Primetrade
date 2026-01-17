@@ -1,12 +1,12 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-// Generate JWT Token for secure sessions [cite: 17, 28, 33]
+// Generate JWT Token for secure sessions 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// @desc Register new user
+//  Register new user
 exports.registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     try {
@@ -18,10 +18,10 @@ exports.registerUser = async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
-            token: generateToken(user._id) // Send token to frontend [cite: 33]
+            token: generateToken(user._id) // Send token to frontend
         });
     } catch (error) {
-    console.log("REGISTRATION ERROR:", error); // Check your terminal for this!
+    console.log("REGISTRATION ERROR:", error); 
     res.status(500).json({ message: error.message });
 }
 };
@@ -46,7 +46,7 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-// @desc Update user profile
+//  Update user profile
 exports.updateUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
@@ -64,7 +64,7 @@ exports.updateUserProfile = async (req, res) => {
     }
 };
 
-// @desc Delete user account
+//  Delete user account
 exports.deleteUser = async (req, res) => {
     try {
         await User.findByIdAndDelete(req.user._id);

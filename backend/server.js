@@ -2,13 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db'); // 1. Import the db file
+const connectDB = require('./config/db'); 
 const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
-
-
-
-
 
 // 2. Connect to Database
 connectDB();

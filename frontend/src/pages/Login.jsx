@@ -45,7 +45,7 @@ const Login = () => {
                     <p className="text-gray-600 mt-2">Sign in to your Taskly account</p>
                 </div>
 
-                {/* Card - Added w-full class */}
+                {/* Card - */}
                 <div className="bg-white rounded-2xl shadow-xl p-8 w-full">
                     {/* Error Message */}
                     {error && (
@@ -56,7 +56,7 @@ const Login = () => {
                     )}
 
                     <form onSubmit={handleSubmit} className="w-full">
-                        {/* Email Field - FIXED: Added value binding and text color */}
+                        {/* Email Field - : Added value binding and text color */}
                         <div className="mb-6 w-full">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Email Address
@@ -77,7 +77,7 @@ const Login = () => {
                             </div>
                         </div>
 
-                        {/* Password Field - FIXED: Added value binding and text color */}
+                        {/* Password Field -  Added value binding and text color */}
                         <div className="mb-6 w-full">
                             <div className="flex items-center justify-between mb-2">
                                 <label className="block text-sm font-medium text-gray-700">
@@ -200,4 +200,3 @@ const Login = () => {
 
 export default Login;
 
-//  <div className="min-h-screen w-screen bg-gray-50"></div>
